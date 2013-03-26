@@ -33,12 +33,14 @@
 			switch ($page [0]) {
 				case "export" :
 					@include (dirname ( __FILE__ ) . "/export.php");
+					return true;
 					break;
 				case "import" :
 					@include (dirname ( __FILE__ ) . "/import.php");
 					if ($page[1]) {
 						set_input('config', $page[1]);
 					}
+					return true;
 					break;
 				default :
 					@include (dirname ( __FILE__ ) . "/export.php");

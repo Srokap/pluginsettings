@@ -16,7 +16,7 @@ $title = elgg_echo('pluginsettings:title:export');
 $content = elgg_view('pluginsettings/export');
     
 // Format page
-$body = elgg_view_layout('two_column_left_sidebar', false, $content);
+$body = elgg_view_layout('two_column_left_sidebar', null, $content);
 
 // check if XMLWriter is defined
 if (!class_exists('XMLWriter')) {

@@ -12,7 +12,7 @@ $title = elgg_echo('pluginsettings:title:import');
 $content = elgg_view('pluginsettings/import');
     
 // Format page
-$body = elgg_view_layout('two_column_left_sidebar', false, $content);
+$body = elgg_view_layout('two_column_left_sidebar', null, $content);
 
 // check if XMLReader is defined
 if (!class_exists('XMLReader')) {
