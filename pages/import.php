@@ -1,11 +1,8 @@
 <?php
-// Start your engines
-require_once (dirname ( dirname ( dirname ( __FILE__ ) ) ) . "/engine/start.php");
-
 // run user gatekeeper
 admin_gatekeeper ();
 
-set_context('pluginsettings');
+set_context('admin');
 
 // create view
 $title = elgg_echo('pluginsettings:title:import');	
@@ -20,4 +17,4 @@ if (!class_exists('XMLReader')) {
 }
 
 // Draw it
-echo page_draw( $title, $body );
+echo elgg_view_page($title, $body, 'admin');

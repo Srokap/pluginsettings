@@ -7,8 +7,8 @@ define('externalpage',true);
 
 $_SERVER["PHP_SELF"] = 'action_handler.php';
 
-require_once ( dirname ( dirname ( dirname ( __FILE__ ) ) )  . "/engine/start.php");
-require_once ( dirname ( __FILE__ )  . "/includes/import.inc.php" ); 
+require_once ( dirname ( dirname ( dirname ( dirname ( __FILE__ ) ) ) ) . "/engine/start.php");
+require_once ( dirname ( dirname ( __FILE__ ) )  . "/includes/import.inc.php" ); 
 
 if (!$argv) {
 	global $CONFIG;

@@ -1,7 +1,4 @@
 <?php
-// Start your engines
-require_once (dirname ( dirname ( dirname ( __FILE__ ) ) ) . "/engine/start.php");
-
 // run user gatekeeper
 admin_gatekeeper ();
 
@@ -9,7 +6,7 @@ admin_gatekeeper ();
 //echo "<style> .xdebug-var-dump { background: black; }</style>";
 //var_dump($CONFIG);
 
-set_context('pluginsettings');
+set_context('admin');
 	
 // create view
 $title = elgg_echo('pluginsettings:title:export');	
@@ -24,4 +21,4 @@ if (!class_exists('XMLWriter')) {
 }
 
 // Draw it
-echo page_draw( $title, $body );
+echo elgg_view_page($title, $body, 'admin');

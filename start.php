@@ -1,58 +1,52 @@
 <?php
-    function pluginsettings_init() {
-    	global $CONFIG;
-    	register_action ( "pluginsettings/import", false, $CONFIG->pluginspath . "pluginsettings/actions/import.php", true );
-		register_action ( "pluginsettings/export", false, $CONFIG->pluginspath . "pluginsettings/actions/export.php", true );
-    	register_page_handler ( 'pluginsettings', 'pluginsettings_page_handler' );
-    	register_elgg_event_handler ( 'pagesetup', 'system', 'pluginsettings_pagesetup' );
-    }
-    
-    function pluginsettings_pagesetup() {
-	
-		global $CONFIG;
+function pluginsettings_init() {
+	elgg_register_action("pluginsettings/import", elgg_get_config('pluginspath') . "pluginsettings/actions/import.php", 'admiin');
+	elgg_register_action("pluginsettings/export", elgg_get_config('pluginspath') . "pluginsettings/actions/export.php", 'admin');
+	elgg_register_page_handler('pluginsettings', 'pluginsettings_page_handler');
+	elgg_register_event_handler('pagesetup', 'system', 'pluginsettings_pagesetup');
+}
 
-    	if (get_context() == 'admin' && isadminloggedin()) {
-			add_submenu_item(elgg_echo('pluginsettings:menu:admin'), $CONFIG->wwwroot . 'pg/pluginsettings/export');
-		}		
-		
-		// add submenu options
-		if (get_context () == "pluginsettings") {
-			if ((page_owner () == $_SESSION ['guid'] || ! page_owner ()) && isadminloggedin ()) {
-				add_submenu_item ( elgg_echo ( 'pluginsettings:menu:export' ), $CONFIG->wwwroot . "pg/pluginsettings/export" );
-				add_submenu_item ( elgg_echo ( 'pluginsettings:menu:import' ), $CONFIG->wwwroot . "pg/pluginsettings/import" );
-			}
+function pluginsettings_pagesetup() {
+
+	if (elgg_get_context() == 'admin' && elgg_is_admin_logged_in()) {
+		elgg_register_menu_item('page', ElggMenuItem::factory(array(
+			'name' => 'pluginsettings/export',
+			'href' => 'pluginsettings/export',
+			'text' => elgg_echo('pluginsettings:menu:export'),
+			'section' => 'configure',
+			'parent_name' => 'settings',
+			'priority' => 40,
+		)));
+		elgg_register_menu_item('page', ElggMenuItem::factory(array(
+			'name' => 'pluginsettings/import',
+			'href' => 'pluginsettings/import',
+			'text' => elgg_echo('pluginsettings:menu:import'),
+			'section' => 'configure',
+			'parent_name' => 'settings',
+			'priority' => 40,
+		)));
+	}
+}	
+
+function pluginsettings_page_handler($page) {
+
+	if (isset ( $page [0] )) {
+		switch ($page [0]) {
+			case "export" :
+				include (dirname ( __FILE__ ) . "/pages/export.php");
+				return true;
+				break;
+			case "import" :
+				include (dirname ( __FILE__ ) . "/pages/import.php");
+				if ($page[1]) {
+					set_input('config', $page[1]);
+				}
+				return true;
+				break;
 		}
-	
-	}    
-    
-    function pluginsettings_page_handler($page) {
-	
-		global $CONFIG;
-		
-		if (isset ( $page [0] )) {
-			switch ($page [0]) {
-				case "export" :
-					@include (dirname ( __FILE__ ) . "/export.php");
-					return true;
-					break;
-				case "import" :
-					@include (dirname ( __FILE__ ) . "/import.php");
-					if ($page[1]) {
-						set_input('config', $page[1]);
-					}
-					return true;
-					break;
-				default :
-					@include (dirname ( __FILE__ ) . "/export.php");
-					return true;
-			}
-		} else {
-			@include (dirname ( __FILE__ ) . "/export.php");
-			return true;			
-		}
-    }
-    
-    
-    
-    register_elgg_event_handler('init','system','pluginsettings_init');
-?>
+	}
+	include (dirname ( __FILE__ ) . "/pages/export.php");
+	return true;
+}
+
+elgg_register_event_handler('init','system','pluginsettings_init');
