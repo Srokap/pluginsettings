@@ -5,26 +5,19 @@
 class PluginSettingsImporter {
 	
 	/**
-	 * @var PluginSettingsImporter|null
-	 */
-	private static $instance;
-	
-	/**
-	 * @return PluginSettingsImporter
-	 */
-	public static function getInstance() {
-		if (!self::$instance) {
-			self::$instance = new PluginSettingsImporter();
-		}
-		return self::$instance;
-	}
-	
-	/**
 	 * Processes the XML array and farms off work to functions outside the main node
-	 * @param array $xml_array
+	 * @param array $xml
 	 * @return null
 	 */
-	public function processImportXML($xml_array, $type) {
+	public function execute($xml, $type) {
+		
+		// read the xml string
+		$reader = new XMLReader ( );
+		$reader->setParserProperty ( XMLReader::VALIDATE, true );
+		$reader->XML ( $xml );
+		// parse the XML file into an array
+		$xml_array = $this->xml2assoc($reader);
+		
 		$core = array();
 		$plugins = array();
 
@@ -343,14 +336,14 @@ class PluginSettingsImporter {
 	 * @return NULL
 	 * @todo use 1.9 ElggXmlElement
 	 */
-	public static function xml2assoc($xml) {
+	private function xml2assoc($xml) {
 		$tree = null;
 		while ( $xml->read () )
 			switch ($xml->nodeType) {
 				case XMLReader::END_ELEMENT :
 					return $tree;
 				case XMLReader::ELEMENT :
-					$node = array ('tag' => $xml->name, 'value' => $xml->isEmptyElement ? '' : self::xml2assoc ( $xml ) );
+					$node = array ('tag' => $xml->name, 'value' => $xml->isEmptyElement ? '' : $this->xml2assoc ( $xml ) );
 					if ($xml->hasAttributes)
 						while ( $xml->moveToNextAttribute () )
 						$node ['attributes'] [$xml->name] = $xml->value;

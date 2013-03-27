@@ -3,21 +3,15 @@
 admin_gatekeeper ();
 
 // get uploaded file
-$file = get_uploaded_file ( 'upload' );
+$xml = get_uploaded_file ( 'upload' );
 
 // get import type
 $type = strtolower(get_input('type'));
 
-// read the xml file that was uploaded
-$xml = new XMLReader ( );
-$xml->setParserProperty ( XMLReader::VALIDATE, true );
-$xml->XML ( $file );
-
-// parse the XML file into an array
-$xml_array = PluginSettingsImporter::xml2assoc($xml);
+$importer = new PluginSettingsImporter();
 
 // process the XML array
-PluginSettingsImporter::getInstance()->processImportXML($xml_array, $type);
+$importer->execute($xml, $type);
 
 // clear out all site caches
 elgg_regenerate_simplecache();
