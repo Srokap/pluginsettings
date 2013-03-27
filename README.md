@@ -25,7 +25,6 @@ TODOs
 -----
 
 * Use SimpleXML rather than XMLWriter
-* manifest convert to 1.8 format
 * Review exports correctness
 * Review import correctness
 * Backup automatically old settings before import
