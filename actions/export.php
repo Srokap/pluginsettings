@@ -1,32 +1,28 @@
 <?php
-// Start your engines
-require_once (dirname ( dirname ( dirname ( dirname ( __FILE__ ) ) ) ) . "/engine/start.php");
-
-// get elgg version and release
-require_once (dirname ( dirname ( dirname ( dirname ( __FILE__ ) ) ) ) . "/version.php");
-
 // run user gatekeeper
-admin_gatekeeper ();
-action_gatekeeper();
+admin_gatekeeper();
+
+$time = time();
 
 // get plugin information
-$plugin_list = get_plugin_list ();
+$plugin_list = elgg_get_plugin_ids_in_dir();
 
 global $CONFIG;
 
 // serve xml doc as xml
-header ( 'Content-Disposition: attachment; filename="site-export.xml"' );
-header ( 'Content-type: application/xml' );
+$fileName = 'site-export-' . gmdate('Y-m-d', $time) . '.xml';
+header('Content-Disposition: attachment; filename="' . $fileName . '"');
+header('Content-type: application/xml');
 
-$xml = new XmlWriter ( );
-$xml->openMemory ();
-$xml->setIndent ( true );
+$xml = new XmlWriter();
+$xml->openMemory();
+$xml->setIndent(true);
 $xml->startDocument ( '1.0', 'UTF-8' );
 $xml->startElement ( 'elgg' );
 
-$xml->writeAttribute ( 'timestamp', time () );
-$xml->writeAttribute ( 'version', $version );
-$xml->writeAttribute ( 'release', $release );
+$xml->writeAttribute ( 'timestamp', $time );
+$xml->writeAttribute ( 'version', get_version(false));
+$xml->writeAttribute ( 'release', get_version(true));
 
 // reserved: to be used in the future to save core settings
 $xml->startElement ( 'core' );
@@ -253,14 +249,14 @@ if ($plugin_list) {
 		$xml->endElement ();
 		
 		$xml->startElement ( 'enabled' );
-		if (is_plugin_enabled ( $mod )) {
+		if (elgg_is_active_plugin($mod)) {
 			$xml->text ( 'true' );
 		} else {
 			$xml->text ( 'false' );
 		}
 		$xml->endElement ();
 		
-		$plugin_entity = find_plugin_settings ( $mod );
+		$plugin_entity = elgg_get_plugin_from_id($mod);
 		if ($plugin_entity) {
 			$plugin_settings = get_all_private_settings ( $plugin_entity->guid );
 			if ($plugin_settings) {
@@ -317,4 +313,4 @@ if ($plugin_list) {
 
 $xml->endElement ();
 echo utf8_encode ( $xml->outputMemory ( true ) );
-exit ();
+exit;

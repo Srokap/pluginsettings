@@ -1,8 +1,5 @@
-<div id="content_area_user_title">
-	<h2><?php echo elgg_echo( 'pluginsettings:title:import' ); ?></h2>
-</div>
 <?php 
-echo elgg_view_module('main', null, elgg_echo( 'pluginsettings:import:warning')); 
+echo elgg_view_module('main', elgg_echo('pluginsettings:warning'), elgg_echo( 'pluginsettings:import:warning')); 
 ?>
 <form id="changeusernameform" action="<?php echo $CONFIG->wwwroot; ?>action/pluginsettings/import" enctype="multipart/form-data" method="post">
 <?php 	

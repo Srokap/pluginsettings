@@ -1,6 +1,3 @@
-<div id="content_area_user_title">
-	<h2><?php echo elgg_echo( 'pluginsettings:title:export' ); ?></h2>
-</div>
 <form id="changeusernameform" action="<?php echo $CONFIG->wwwroot; ?>action/pluginsettings/export" method="post">
 
 <?php 
