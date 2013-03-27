@@ -21,6 +21,12 @@ You need XMLReader and XMLWriter compiled with your PHP instance.
 XMLWriter is usually included with PHP by default. XMLReader may
 not be!
 
+TODOs
+-----
 
-
-
+* Use SimpleXML rather than XMLWriter
+* manifest convert to 1.8 format
+* Review exports correctness
+* Review import correctness
+* Backup automatically old settings before import
+* Implement error handling...

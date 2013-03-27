@@ -53,10 +53,10 @@ class PluginSettingsImporter {
 			}
 		}
 		if (($type == 'core') || ($type == 'full')) {
-			$this->_processCore ( $core );
+			$this->processCore ( $core );
 		}
 		if (($type == 'plugins') || ($type == 'full')) {
-			$this->_processPlugins ( $plugins );
+			$this->processPlugins ( $plugins );
 		}
 	}
 	
@@ -64,7 +64,7 @@ class PluginSettingsImporter {
 	 * Processes, resers and restores core settings
 	 * @return null
 	 */
-	private function _processCore($core) {
+	private function processCore($core) {
 		//var_dump($core);
 		if ($core) {
 			$config = array();
@@ -83,9 +83,9 @@ class PluginSettingsImporter {
 				}
 			}
 	
-			$this->_processDatabase($database);
-			$guid = $this->_processSite($site);
-			$this->_processConfig($config, $guid);
+			$this->processDatabase($database);
+			$guid = $this->processSite($site);
+			$this->processConfig($config, $guid);
 		}
 	}
 	
@@ -93,9 +93,9 @@ class PluginSettingsImporter {
 	 * @param unknown_type $database
 	 * @return null
 	 */
-	private function _processDatabase($database) {
+	private function processDatabase($database) {
 	
-		$db_vars = $this->_array2hash($database[0]["value"]);
+		$db_vars = $this->array2hash($database[0]["value"]);
 	
 		$save_vars = array();
 		$save_vars['CONFIG_DBUSER']   = $db_vars['username'];
@@ -113,8 +113,8 @@ class PluginSettingsImporter {
 	 * @param unknown_type $guid
 	 * @return null
 	 */
-	private function _processConfig($config, $guid) {
-		$config = $this->_array2hash($config);
+	private function processConfig($config, $guid) {
+		$config = $this->array2hash($config);
 		//var_dump($config);
 	
 		if (!datalist_get('installed')) {
@@ -157,8 +157,8 @@ class PluginSettingsImporter {
 	 * @return Ambigous <unknown>
 	 * @return int
 	 */
-	private function _processSite($site_details) {
-		$site_details = $this->_array2hash($site_details);
+	private function processSite($site_details) {
+		$site_details = $this->array2hash($site_details);
 		$elgg_site = get_entity($site_details['id']);
 		if ($elgg_site) {
 			$elgg_site->name = $site_details['name'];
@@ -184,7 +184,7 @@ class PluginSettingsImporter {
 	 * @return multitype:unknown
 	 * @return mixed
 	 */
-	private function _array2hash($array) {
+	private function array2hash($array) {
 	
 		$result = array();
 		foreach ($array as $element) {
@@ -198,7 +198,7 @@ class PluginSettingsImporter {
 	 * @param $plugins
 	 * @return null
 	 */
-	private function _processPlugins($plugins) {
+	private function processPlugins($plugins) {
 		//var_dump($plugins);
 		if (!$plugins) {
 			return false;
@@ -268,19 +268,19 @@ class PluginSettingsImporter {
 		}
 	
 		// disable all current plugins
-		$this->_disableAllPlugins ();
+		$this->disableAllPlugins ();
 	
 		// clear all plugin settings
-		$this->_clearAllPluginSettings ();
+		$this->clearAllPluginSettings ();
 	
 		// setup new plugin order
 		regenerate_plugin_list ( $plugin_list );
 	
 		// enable plugins
-		$this->_enablePlugins ( $plugin_enabled );
+		$this->enablePlugins ( $plugin_enabled );
 	
 		// restore settings to plugins
-		$this->_restorePluginSettings ( $plugin_settings );
+		$this->restorePluginSettings ( $plugin_settings );
 	
 	}
 	
@@ -289,10 +289,10 @@ class PluginSettingsImporter {
 	 * @param $plugin_settings
 	 * @return null
 	 */
-	private function _restorePluginSettings($plugin_settings) {
+	private function restorePluginSettings($plugin_settings) {
 		foreach ( $plugin_settings as $plugin => $settings ) {
 			foreach ( $settings as $setting_name => $setting_value ) {
-				set_plugin_setting ( $setting_name, $setting_value, $plugin );
+				elgg_set_plugin_setting ( $setting_name, $setting_value, $plugin );
 			}
 		}
 	}
@@ -301,8 +301,8 @@ class PluginSettingsImporter {
 	 * Clears all plugin settings for all plugins
 	 * @return null
 	 */
-	private function _clearAllPluginSettings() {
-		$plugins = get_entities ( 'object', 'plugin' );
+	private function clearAllPluginSettings() {
+		$plugins = elgg_get_plugins();
 		if ($plugins) {
 			foreach ( $plugins as $plugin ) {
 				remove_all_private_settings ( $plugin->guid );
@@ -316,7 +316,7 @@ class PluginSettingsImporter {
 	 * @param $plugin_enabled
 	 * @return null
 	 */
-	private function _enablePlugins($plugin_enabled) {
+	private function enablePlugins($plugin_enabled) {
 		global $CONFIG;
 		$site_guid = $CONFIG->site_guid;
 		$site = get_entity ( $site_guid );
@@ -329,7 +329,7 @@ class PluginSettingsImporter {
 	 * Disables all plugins, but keeps one in due to a elgg bug
 	 * @return null
 	 */
-	private function _disableAllPlugins() {
+	private function disableAllPlugins() {
 		global $CONFIG;
 		$site_guid = $CONFIG->site_guid;
 		$site = get_entity ( $site_guid );
