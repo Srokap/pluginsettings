@@ -51,6 +51,10 @@ class PluginSettingsImporter {
 		if (($type == 'plugins') || ($type == 'full')) {
 			$this->processPlugins ( $plugins );
 		}
+		
+		// clear out all site caches
+		elgg_regenerate_simplecache();
+		elgg_reset_system_cache();
 	}
 	
 	/**

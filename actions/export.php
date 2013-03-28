@@ -3,5 +3,6 @@
 admin_gatekeeper();
 
 $exporter = new PluginSettingsExporter();
-echo $exporter->execute();
+$exporter->execute();
+$exporter->output();
 exit;
